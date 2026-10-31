@@ -21,7 +21,13 @@ money.
   given back if placing fails or the order is cancelled.
 - **Invoices and refunds**: invoices are paid by the cards first; a credit
   memo gives back to the cards first (the last used first), the rest to the
-  payment.
+  payment. A credit memo that refunds a gift card line turns off as many of
+  the cards it made as were refunded, among those nobody used (not emailed
+  yet first, then the newest), each noted in the card's history ("Order line
+  refunded") and on the order. A card already used stays on, and the order
+  says so: turn it off by hand if the refund should take it back. A card
+  turned off by hand counts; a refund without qty (an adjustment) changes no
+  card.
 - **Balance**: `/giftcard/balance?code=...` (linked from the email).
 - **Marketing > Gift Cards** (admin): every card (search by code, recipient
   or order), one card's history; make a card by hand (and email it), turn a
@@ -67,6 +73,8 @@ Stores > Configuration where it has a setting, or back up first:
 `bin/magento setup:upgrade --safe-mode=1` dumps the data before anything is
 dropped (`--data-restore=1` puts it back). Deleting the module's code instead
 leaves the tables in place.
+
+What changed in each release: [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

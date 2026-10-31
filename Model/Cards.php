@@ -22,6 +22,7 @@ class Cards
     public const RETURNED = 'returned';
     public const REFUNDED = 'refunded';
     public const ADMIN = 'admin';
+    public const DISABLED = 'disabled';
 
     private const TABLE = 'zero_giftcard';
     private const HISTORY = 'zero_giftcard_history';
@@ -164,6 +165,37 @@ class Cards
             ['is_active' => (int) $active],
             ['card_id = ?' => $cardId]
         );
+    }
+
+    /**
+     * Turns an active card off and records it in its history (amount 0);
+     * false when it was already off (nothing written). With $onlyUnused, only
+     * while nothing was spent from it (checked by the UPDATE itself, so a card
+     * redeemed a moment ago stays on).
+     */
+    public function deactivate(int $cardId, string $comment, ?string $orderIncrementId = null, bool $onlyUnused = false): bool
+    {
+        $connection = $this->resource->getConnection();
+        $table = $this->resource->getTableName(self::TABLE);
+        $where = ['card_id = ?' => $cardId, 'is_active = ?' => 1];
+        if ($onlyUnused) {
+            $where[] = 'balance >= initial_amount - 0.0001';
+        }
+        $changed = $connection->update($table, ['is_active' => 0], $where);
+        if ($changed < 1) {
+            return false;
+        }
+        $balance = (float) $connection->fetchOne($connection->select()->from($table, ['balance'])->where('card_id = ?', $cardId));
+        $connection->insert($this->resource->getTableName(self::HISTORY), [
+            'card_id' => $cardId,
+            'amount' => 0,
+            'balance' => round($balance, 4),
+            'action' => self::DISABLED,
+            'order_increment_id' => $orderIncrementId,
+            'comment' => mb_substr($comment, 0, 255),
+        ]);
+
+        return true;
     }
 
     public function markSent(int $cardId): void

@@ -39,9 +39,11 @@ class Apply implements HttpPostActionInterface
     {
         $quote = $this->checkoutSession->getQuote();
         $error = null;
-        $typed = trim((string) $this->request->getParam('giftcard_code'));
+        $typed = $this->request->getParam('giftcard_code');
+        $typed = trim(is_scalar($typed) ? (string) $typed : '');
         if ($quote->getId()) {
-            $remove = (string) $this->request->getParam('remove');
+            $remove = $this->request->getParam('remove');
+            $remove = is_scalar($remove) ? (string) $remove : '';
             if ($remove !== '') {
                 $this->cartCards->remove($quote, $remove);
                 $typed = '';

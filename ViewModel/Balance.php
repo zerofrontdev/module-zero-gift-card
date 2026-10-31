@@ -28,7 +28,8 @@ class Balance implements ArgumentInterface
 
     public function code(): string
     {
-        return Codes::normalize(mb_substr((string) $this->request->getParam('code'), 0, 40));
+        $codeParam = $this->request->getParam('code');
+        return Codes::normalize(mb_substr(is_scalar($codeParam) ? (string) $codeParam : '', 0, 40));
     }
 
     /**

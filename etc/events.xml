@@ -24,11 +24,15 @@
     </event>
     <event name="order_cancel_after">
         <observer name="zero_giftcard_cancel" instance="Zero\GiftCard\Observer\ReturnOnCancel"/>
+        <!-- Defensive: cards exist only for invoiced qty, which a cancel doesn't touch. -->
+        <observer name="zero_giftcard_disable_canceled" instance="Zero\GiftCard\Observer\DisableRefundedCards"/>
     </event>
     <event name="sales_order_invoice_register">
         <observer name="zero_giftcard_invoiced" instance="Zero\GiftCard\Observer\InvoiceRegister"/>
     </event>
     <event name="sales_order_creditmemo_refund">
         <observer name="zero_giftcard_refund" instance="Zero\GiftCard\Observer\RefundToCards"/>
+        <!-- A refunded gift card line: the cards it made that nobody used are turned off. -->
+        <observer name="zero_giftcard_disable_refunded" instance="Zero\GiftCard\Observer\DisableRefundedCards"/>
     </event>
 </config>

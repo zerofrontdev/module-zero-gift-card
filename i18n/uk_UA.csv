@@ -33,3 +33,7 @@
 "Order cancelled","Замовлення скасовано"
 "Refund","Повернення коштів"
 "The order was not placed.","Замовлення не оформлено."
+"Order line refunded","Рядок замовлення повернено"
+"Gift card %1 turned off: its order line was refunded.","Подарункову картку %1 вимкнено: її рядок замовлення повернено."
+"Gift card %1 was already used (%2 of %3 left), so it stays on. Turn it off under Marketing > Gift Cards if the refund should take it back.","Подарункову картку %1 вже використано (залишок %2 з %3), тому вона лишається активною. Вимкніть її в Marketing > Gift Cards, якщо повернення має її анулювати."
+"Gift card %1 turned off: its order was cancelled.","Подарункову картку %1 вимкнено: її замовлення скасовано."
